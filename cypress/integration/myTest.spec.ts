@@ -2,15 +2,22 @@
 
 describe('example to-do app', () => {
     beforeEach(() => {
-      // Cypress starts out with a blank slate for each test
-      // so we must tell it to visit our website with the `cy.visit()` command.
-      // Since we want to visit the same URL at the start of all our tests,
-      // we include it in our beforeEach function so that it runs before each test
       cy.task('clearNock');
     })
 
     it('Simple test', () => {
         cy.visit('http://localhost:3000/')
-        cy.get('.myButton').children().first().click();
+        // doesnt matter we are statically mocking there
+        cy.task('nock',{}).then(() => {
+          cy.get('.myButton').children().first().click();
+        } 
+        )
+        cy.get('[data-cy="resultsBox"]').should('have.value', 'I am mocked')
     })
+
+    it('Simple test non mocked', () => {
+      cy.visit('http://localhost:3000/')
+      // Can fix so it is resilient to different page load times
+      cy.get('.myButton', ).children().first().click();
+  })
 })
